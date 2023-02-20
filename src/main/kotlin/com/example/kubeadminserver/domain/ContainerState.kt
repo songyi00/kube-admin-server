@@ -3,5 +3,6 @@ package com.example.kubeadminserver.domain
 enum class ContainerState{
     RUNNING,
     TERMINATED,
-    WAITING;
+    WAITING,
+    ERROR;
 }
