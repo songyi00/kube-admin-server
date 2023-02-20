@@ -1,0 +1,7 @@
+### 1. pod 조회 by namespace
+GET http://localhost:8080/server-monitoring/pods/dev
+Content-Type: application/json
+
+###
+GET http://localhost:8080/hello
+Content-Type: application/json

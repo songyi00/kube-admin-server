@@ -2,6 +2,7 @@ package com.example.kubeadminserver.application.service
 
 import com.example.kubeadminserver.adaptor.config.K8sConfig
 import com.example.kubeadminserver.application.port.ServerMonitoringUseCase
+import com.example.kubeadminserver.domain.ContainerState
 import com.example.kubeadminserver.domain.PodInfo
 import com.example.kubeadminserver.domain.PodStatus
 import io.fabric8.kubernetes.api.model.Pod
@@ -14,9 +15,23 @@ class ServerMonitoringService(private val k8sConfig: K8sConfig) : ServerMonitori
         return pods.map {
             PodInfo(
                 it.metadata.name,
-                PodStatus(it.status.conditions, it.status.containerStatuses, it.status.message, it.status.startTime)
+                PodStatus(getPodState(it), it.status.message, it.status.startTime)
             )
         }
+    }
+
+    private fun getPodState(it: Pod): ContainerState {
+        val statuses = it.status.containerStatuses
+        if (statuses.isEmpty()){
+            return ContainerState.TERMINATED
+        }
+        if (statuses[0].state.running != null) {
+            return ContainerState.RUNNING
+        }
+        if (statuses[0].state.running  != null) {
+            return ContainerState.WAITING
+        }
+        return ContainerState.TERMINATED
     }
 
     private fun getPods(namespace: String): MutableList<Pod>? =
