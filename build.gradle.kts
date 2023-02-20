@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+//	implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
@@ -31,6 +31,10 @@ dependencies {
 	// https://mvnrepository.com/artifact/io.fabric8/fabric8-maven-plugin
 	val fabricVersion = "3.2.28"
 	implementation("io.fabric8:fabric8-maven-plugin:${fabricVersion}")
+
+	// https://mvnrepository.com/artifact/io.github.microutils/kotlin-logging
+	implementation("io.github.microutils:kotlin-logging:2.1.23")
+
 }
 
 tasks.withType<KotlinCompile> {
