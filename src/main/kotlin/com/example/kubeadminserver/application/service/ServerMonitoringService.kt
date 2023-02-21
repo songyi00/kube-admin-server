@@ -2,7 +2,7 @@ package com.example.kubeadminserver.application.service
 
 import com.example.kubeadminserver.adaptor.config.K8sConfig
 import com.example.kubeadminserver.application.port.ServerMonitoringUseCase
-import com.example.kubeadminserver.domain.ContainerState
+import com.example.kubeadminserver.domain.Phase
 import com.example.kubeadminserver.domain.PodInfo
 import com.example.kubeadminserver.domain.PodStatus
 import io.fabric8.kubernetes.api.model.Pod
@@ -13,26 +13,22 @@ class ServerMonitoringService(private val k8sConfig: K8sConfig) : ServerMonitori
     override suspend fun getPodsInNameSpace(namespace: String): List<PodInfo> {
         val pods = getPods(namespace) ?: emptyList()
         return pods.map {
-            PodInfo(
-                it.metadata.name,
-                PodStatus(getPodState(it), it.status.message, it.status.startTime)
-            )
+            podInfo(it)
         }
     }
 
-    private fun getPodState(it: Pod): String {
-//        val statuses = it.status.containerStatuses
-//        if (statuses.isEmpty()){
-//            return ContainerState.TERMINATED
-//        }
-//        if (statuses[0].state.running != null) {
-//            return ContainerState.RUNNING
-//        }
-//        if (statuses[0].state.waiting  != null) {
-//            return ContainerState.WAITING
-//        }
-//        return ContainerState.TERMINATED
-        return it.status.phase
+    //TODO(추후 fabric8 라이브러리 객체 값을 어댑터에서 서비스 dto 로 변경 후 사용하도록 변경하기
+    // -> 응용 로직에 외부 라이브러리가 들어가는 것이 좋지 않아보임
+    private fun podInfo(it: Pod): PodInfo {
+        val status = it.status
+        return PodInfo(
+            it.metadata.name,
+            PodStatus(getPodState(status.phase), status.message, status.startTime)
+        )
+    }
+
+    private fun getPodState(phase: String): Phase {
+        return Phase.getPhase(phase)
     }
 
     private fun getPods(namespace: String): MutableList<Pod>? =
