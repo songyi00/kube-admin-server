@@ -9,8 +9,8 @@ enum class Phase(val value: String) {
     FAILED("Failed");
 
     companion object {
-        fun getPhase(string: String): Phase {
-            return when (string) {
+        fun getPhase(value: String): Phase {
+            return when (value) {
                 RUNNING.value -> RUNNING
                 PENDING.value -> PENDING
                 FAILED.value -> FAILED
