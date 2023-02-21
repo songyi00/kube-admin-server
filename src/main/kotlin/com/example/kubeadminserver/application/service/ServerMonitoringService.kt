@@ -28,7 +28,7 @@ class ServerMonitoringService(private val k8sConfig: K8sConfig) : ServerMonitori
     }
 
     private fun getPodState(phase: String): Phase {
-        return Phase.getPhase(phase)
+        return Phase.fromValue(phase)
     }
 
     private fun getPods(namespace: String): MutableList<Pod>? =
