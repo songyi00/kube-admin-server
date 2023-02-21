@@ -2,6 +2,7 @@ package com.example.kubeadminserver.domain
 
 import java.lang.IllegalArgumentException
 
+
 enum class Phase(val value: String) {
     RUNNING("Running"),
     PENDING("Pending"),
@@ -9,16 +10,10 @@ enum class Phase(val value: String) {
     FAILED("Failed");
 
     companion object {
-        fun getPhase(value: String): Phase {
-            return when (value) {
-                RUNNING.value -> RUNNING
-                PENDING.value -> PENDING
-                FAILED.value -> FAILED
-                SUCCEEDED.value -> SUCCEEDED
-                else -> {
-                    throw IllegalArgumentException("not found phase")
-                }
-            }
+        private val mapping = values().associateBy(Phase::value)
+
+        fun fromValue(value: String): Phase {
+            return mapping[value] ?: throw IllegalArgumentException("not found phase")
         }
     }
 }
